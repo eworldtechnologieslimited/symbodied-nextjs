@@ -6,17 +6,51 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
+import { createClient } from "@/lib/supabase/client";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const firstName = form.get("first_name") as string;
+    const lastName = form.get("last_name") as string;
+    const email = form.get("email") as string;
+    const password = form.get("password") as string;
+
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1400));
+    const supabase = createClient();
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { first_name: firstName, last_name: lastName },
+      },
+    });
     setLoading(false);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    setDone(true);
     toast.success("Account created! Check your email to verify.");
   };
+
+  if (done) {
+    return (
+      <div className="flex flex-col gap-4 text-center">
+        <h1 className="font-display font-bold text-3xl text-ink tracking-tight">Check your email</h1>
+        <p className="text-ink-600 font-sans text-base">
+          We sent a confirmation link to your inbox. Click it to activate your account, then{" "}
+          <Link href="/login" className="text-brand font-semibold hover:underline">sign in</Link>.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8">
@@ -31,6 +65,7 @@ export default function SignupPage() {
         <div className="grid grid-cols-2 gap-4">
           <Input
             label="First name"
+            name="first_name"
             type="text"
             placeholder="Ada"
             required
@@ -38,6 +73,7 @@ export default function SignupPage() {
           />
           <Input
             label="Last name"
+            name="last_name"
             type="text"
             placeholder="Obi"
             required
@@ -45,6 +81,7 @@ export default function SignupPage() {
         </div>
         <Input
           label="Email address"
+          name="email"
           type="email"
           placeholder="you@example.com"
           required
@@ -53,9 +90,11 @@ export default function SignupPage() {
         />
         <Input
           label="Password"
+          name="password"
           type="password"
           placeholder="Min. 8 characters"
           required
+          minLength={8}
           autoComplete="new-password"
           helper="Use at least 8 characters with a mix of letters and numbers."
           leadingIcon={<Lock size={16} />}
