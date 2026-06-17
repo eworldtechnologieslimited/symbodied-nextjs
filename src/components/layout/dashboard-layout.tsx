@@ -93,7 +93,7 @@ export function DashboardLayout({ role, children, title, userName = "" }: Dashbo
         </div>
         <nav className="flex-1 p-3 flex flex-col gap-1 overflow-y-auto">
           {menu.map((item) => {
-            const active = pathname === item.href || (pathname.startsWith(item.href) && item.href !== "/dashboard");
+            const active = pathname === item.href || (pathname.startsWith(item.href + "/") && item.key !== "overview");
             return (
               <Link
                 key={item.key}

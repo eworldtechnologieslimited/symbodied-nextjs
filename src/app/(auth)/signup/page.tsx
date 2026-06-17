@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Mail, Lock, User } from "lucide-react";
+import { Mail, Lock, User, AtSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -17,25 +17,59 @@ export default function SignupPage() {
     const form = new FormData(e.currentTarget);
     const firstName = form.get("first_name") as string;
     const lastName = form.get("last_name") as string;
+    const username = (form.get("username") as string).trim().toLowerCase();
     const email = form.get("email") as string;
     const password = form.get("password") as string;
+    const role = (form.get("role") as string) || "user";
+
+    if (!username) {
+      toast.error("Username is required.");
+      return;
+    }
+    if (!/^[a-z0-9_]{3,30}$/.test(username)) {
+      toast.error("Username must be 3–30 characters: letters, numbers, or underscores only.");
+      return;
+    }
 
     setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+
+    const { data: authData, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { first_name: firstName, last_name: lastName },
+        data: { first_name: firstName, last_name: lastName, role },
       },
     });
-    setLoading(false);
 
     if (error) {
+      setLoading(false);
       toast.error(error.message);
       return;
     }
 
+    if (authData.user) {
+      const { error: profileError } = await supabase.from("profiles").insert({
+        id: authData.user.id,
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        username,
+        role,
+      });
+
+      if (profileError) {
+        setLoading(false);
+        if (profileError.code === "23505") {
+          toast.error("Username is already taken. Please choose another.");
+        } else {
+          toast.error(profileError.message);
+        }
+        return;
+      }
+    }
+
+    setLoading(false);
     setDone(true);
     toast.success("Account created! Check your email to verify.");
   };
@@ -80,6 +114,16 @@ export default function SignupPage() {
           />
         </div>
         <Input
+          label="Username"
+          name="username"
+          type="text"
+          placeholder="ada_obi"
+          required
+          autoComplete="username"
+          leadingIcon={<AtSign size={16} />}
+          helper="3–30 characters. Letters, numbers, and underscores only. Must be unique."
+        />
+        <Input
           label="Email address"
           name="email"
           type="email"
@@ -99,6 +143,18 @@ export default function SignupPage() {
           helper="Use at least 8 characters with a mix of letters and numbers."
           leadingIcon={<Lock size={16} />}
         />
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-ink font-sans">Account type</label>
+          <select
+            name="role"
+            required
+            defaultValue="user"
+            className="w-full px-3 py-2.5 border border-ink-300 rounded-lg text-sm font-sans text-ink bg-white focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand"
+          >
+            <option value="user">User — shop, donate, and explore</option>
+            <option value="vendor">Vendor — sell products and publish content</option>
+          </select>
+        </div>
         <p className="text-xs text-ink-500 font-sans">
           By signing up you agree to our{" "}
           <Link href="/terms" className="text-brand hover:underline">Terms of Service</Link>

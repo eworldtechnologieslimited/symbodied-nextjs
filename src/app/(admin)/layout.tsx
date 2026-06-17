@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -8,15 +9,18 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase
+  // Use service client to bypass the RLS infinite-recursion policy on profiles
+  const serviceSupabase = createServiceClient();
+  const { data: profile } = await serviceSupabase
     .from("profiles")
     .select("role, first_name, last_name")
     .eq("id", user.id)
     .single();
 
-  if (profile?.role !== "admin") {
+  const effectiveRole = profile?.role ?? (user.user_metadata?.role as string);
+  if (effectiveRole !== "admin") {
     const fallback: Record<string, string> = { vendor: "/studio", user: "/dashboard" };
-    redirect(fallback[profile?.role ?? ""] ?? "/dashboard");
+    redirect(fallback[effectiveRole ?? ""] ?? "/dashboard");
   }
 
   const firstName: string = profile?.first_name ?? (user.user_metadata?.first_name as string) ?? "";

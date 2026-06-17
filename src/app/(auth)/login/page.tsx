@@ -8,6 +8,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { getUserRole } from "@/app/actions/auth";
 
 const roleRedirect: Record<string, string> = {
   admin: "/admin",
@@ -36,13 +37,8 @@ export default function LoginPage() {
       return;
     }
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", data.user.id)
-      .single();
-
-    const destination = roleRedirect[profile?.role ?? "user"] ?? "/dashboard";
+    const role = await getUserRole(data.user.id);
+    const destination = roleRedirect[role] ?? "/dashboard";
     router.refresh();
     router.push(destination);
   };

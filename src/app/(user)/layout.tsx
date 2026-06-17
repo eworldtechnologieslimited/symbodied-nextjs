@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 
 export default async function UserLayout({ children }: { children: React.ReactNode }) {
@@ -8,7 +9,8 @@ export default async function UserLayout({ children }: { children: React.ReactNo
 
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase
+  const serviceSupabase = createServiceClient();
+  const { data: profile } = await serviceSupabase
     .from("profiles")
     .select("role, first_name, last_name")
     .eq("id", user.id)
