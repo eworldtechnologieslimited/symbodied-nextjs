@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -58,8 +57,8 @@ export function DashboardLayout({ role, children, title, userName = "Ada Obi" }:
   return (
     <div className="flex h-screen overflow-hidden bg-ink-100">
       {/* Sidebar */}
-      <aside className="w-60 flex-shrink-0 bg-white border-r border-ink-200 flex flex-col">
-        <div className="h-[72px] flex items-center px-5 border-b border-ink-200">
+      <aside className="w-60 shrink-0 bg-white border-r border-ink-200 flex flex-col">
+        <div className="h-18 flex items-center px-5 border-b border-ink-200">
           <Link href="/">
             <Logo height={26} />
           </Link>
@@ -108,11 +107,34 @@ export function DashboardLayout({ role, children, title, userName = "Ada Obi" }:
       {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Topbar */}
-        <header className="h-[72px] bg-white border-b border-ink-200 flex items-center justify-between px-7 flex-shrink-0">
+        <header className="h-18 bg-white border-b border-ink-200 flex items-center justify-between px-7 shrink-0">
           <h1 className="font-display font-bold text-2xl text-ink">
             {title ?? ROLE_LABEL[role]}
           </h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
+            {/* Role switcher */}
+            <nav className="flex items-center gap-5">
+              {(
+                [
+                  { r: "user", label: "User", href: "/dashboard" },
+                  { r: "vendor", label: "Vendor", href: "/studio" },
+                  { r: "admin", label: "Admin", href: "/admin" },
+                ] as const
+              ).map(({ r, label, href }) => (
+                <Link
+                  key={r}
+                  href={href}
+                  className={cn(
+                    "text-sm font-semibold font-sans transition-colors",
+                    role === r
+                      ? "text-brand"
+                      : "text-ink-400 hover:text-ink"
+                  )}
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
             <button className="relative text-ink-600 hover:text-ink transition-colors">
               <Bell size={21} />
               <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-gold" />
