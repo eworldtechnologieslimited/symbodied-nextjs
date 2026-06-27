@@ -45,7 +45,7 @@ export default function AboutPage() {
             </blockquote>
           </div>
           <div className="relative h-[440px] rounded-xl overflow-hidden">
-            <Image src="/images/static/mission_.jpg" alt="Community mission" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+            <Image src="/images/static/newMission.jpg" alt="Community mission" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
           </div>
         </div>
       </section>
@@ -85,7 +85,7 @@ export default function AboutPage() {
         <div className="max-w-[var(--container-max)] mx-auto px-6">
           <SectionHeader overline="Our Community" title="The people behind Symbodied" className="mb-10" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map((n) => (
+            {[5, 6, 7, 4].map((n) => (
               <div key={n} className="relative aspect-square rounded-xl overflow-hidden">
                 <Image src={`/images/hero/community${n}.jpg`} alt={`Community photo ${n}`} fill className="object-cover" sizes="25vw" />
               </div>

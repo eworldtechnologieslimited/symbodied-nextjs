@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Mail, Lock, User, AtSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -115,10 +116,9 @@ export default function SignupPage() {
           autoComplete="email"
           leadingIcon={<Mail size={16} />}
         />
-        <Input
+        <PasswordInput
           label="Password"
           name="password"
-          type="password"
           placeholder="Min. 8 characters"
           required
           minLength={8}

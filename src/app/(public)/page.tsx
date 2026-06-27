@@ -56,20 +56,13 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Hero image mosaic — real community photos */}
-            <div className="hidden md:grid grid-cols-2 gap-3.5" style={{ gridTemplateRows: "168px 159px 159px" }}>
-              <div className="row-span-2 rounded-xl overflow-hidden relative mx-2" style={{ alignSelf: "start", height: "300px" }}>
-                <Image src={HERO_MOSAIC[0].src} alt={HERO_MOSAIC[0].label} fill className="object-cover" sizes="20vw" />
-              </div>
-              <div className="rounded-xl overflow-hidden relative">
-                <Image src={HERO_MOSAIC[1].src} alt={HERO_MOSAIC[1].label} fill className="object-cover" sizes="20vw" />
-              </div>
-              <div className="row-span-2 rounded-xl overflow-hidden relative">
-                <Image src={HERO_MOSAIC[2].src} alt={HERO_MOSAIC[2].label} fill className="object-cover" sizes="20vw" />
-              </div>
-              <div className="rounded-xl overflow-hidden relative">
-                <Image src={HERO_MOSAIC[3].src} alt={HERO_MOSAIC[3].label} fill className="object-cover" sizes="20vw" />
-              </div>
+            {/* Hero image grid — 2×2 equal boxes */}
+            <div className="hidden md:grid grid-cols-2 grid-rows-2 gap-3 h-[420px]">
+              {HERO_MOSAIC.map((img) => (
+                <div key={img.label} className="relative rounded-xl overflow-hidden">
+                  <Image src={img.src} alt={img.label} fill className="object-cover" sizes="25vw" />
+                </div>
+              ))}
             </div>
           </div>
         </div>

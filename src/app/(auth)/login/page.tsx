@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Mail, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -63,10 +64,9 @@ export default function LoginPage() {
           leadingIcon={<Mail size={16} />}
         />
         <div className="flex flex-col gap-1.5">
-          <Input
+          <PasswordInput
             label="Password"
             name="password"
-            type="password"
             placeholder="••••••••"
             required
             autoComplete="current-password"
