@@ -8,17 +8,11 @@ import { projects as STATIC } from "@/lib/data";
 export default async function ProjectsPage() {
   const supabase = await createClient();
 
-  const [
-    { data: rawProjects },
-    { data: { user } },
-  ] = await Promise.all([
-    supabase
-      .from("projects")
-      .select("id, name, category, summary, target, raised, days_left, status")
-      .in("status", ["active", "completed"])
-      .order("created_at", { ascending: false }),
-    supabase.auth.getUser(),
-  ]);
+  const { data: rawProjects } = await supabase
+    .from("projects")
+    .select("id, name, category, summary, target, raised, days_left, status")
+    .in("status", ["active", "completed"])
+    .order("created_at", { ascending: false });
 
   type LiveProject = {
     id: string; name: string; category: string; summary: string;
@@ -54,11 +48,7 @@ export default async function ProjectsPage() {
         </div>
       </section>
 
-      <ProjectsClient
-        projects={projects}
-        isAuthenticated={!!user}
-        isLive={liveProjects.length > 0}
-      />
+      <ProjectsClient projects={projects} />
 
       <section className="py-16 bg-brand">
         <div className="max-w-[var(--container-max)] mx-auto px-6 text-center">

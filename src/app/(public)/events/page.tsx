@@ -11,6 +11,7 @@ type LiveEvent = {
   venue: string;
   location: string;
   slotsLeft: number;
+  image?: string;
 };
 
 const STATIC_EVENTS: LiveEvent[] = [
@@ -31,7 +32,7 @@ export default async function EventsPage() {
   ] = await Promise.all([
     supabase
       .from("events")
-      .select("id, name, theme, date, venue, location, slots, rsvps, status")
+      .select("id, name, theme, date, venue, location, slots, rsvps, status, image_url")
       .eq("status", "active")
       .order("date", { ascending: true }),
     supabase.auth.getUser(),
@@ -58,6 +59,7 @@ export default async function EventsPage() {
       venue: (e.venue as string) ?? "",
       location: (e.location as string) ?? "",
       slotsLeft: Math.max(0, (e.slots as number) - (e.rsvps as number)),
+      image: (e.image_url as string) ?? undefined,
     };
   });
 

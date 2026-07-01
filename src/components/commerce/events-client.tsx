@@ -13,6 +13,8 @@ type LiveEvent = {
   venue: string;
   location: string;
   slotsLeft: number;
+  image?: string;
+  seed?: number;
 };
 
 interface EventsClientProps {
@@ -55,10 +57,11 @@ export function EventsClient({ events, userRsvpSet, isAuthenticated, isLive }: E
         </p>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map((e) => (
+          {filtered.map((e, i) => (
             <EventCard
               key={e.id}
               {...e}
+              seed={e.seed ?? i}
               rsvpButton={
                 isLive ? (
                   <EventRsvpButton

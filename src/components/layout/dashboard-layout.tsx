@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutGrid, FileText, Users, BookOpen, Package,
+  LayoutGrid, FileText, Users, Package,
   Settings, LogOut, Bell, Heart, CalendarDays,
 } from "lucide-react";
 import { Logo } from "./logo";
@@ -19,7 +19,6 @@ const MAIN_MENU: Record<Role, { key: string; label: string; href: string; icon: 
     { key: "dashboard", label: "Dashboard", href: "/dashboard", icon: <LayoutGrid size={18} /> },
     { key: "communities", label: "Communities", href: "/dashboard/communities", icon: <Users size={18} /> },
     { key: "blog-posts", label: "Blog posts", href: "/dashboard/blog-posts", icon: <FileText size={18} /> },
-    { key: "resources", label: "Resources", href: "/dashboard/resources", icon: <BookOpen size={18} /> },
     { key: "events", label: "Events", href: "/dashboard/events", icon: <CalendarDays size={18} /> },
     { key: "saved", label: "Saved", href: "/dashboard/saved", icon: <Heart size={18} /> },
   ],
@@ -27,7 +26,6 @@ const MAIN_MENU: Record<Role, { key: string; label: string; href: string; icon: 
     { key: "dashboard", label: "Dashboard", href: "/dashboard", icon: <LayoutGrid size={18} /> },
     { key: "communities", label: "Communities", href: "/dashboard/communities", icon: <Users size={18} /> },
     { key: "blog-posts", label: "Blog posts", href: "/dashboard/blog-posts", icon: <FileText size={18} /> },
-    { key: "resources", label: "Resources", href: "/dashboard/resources", icon: <BookOpen size={18} /> },
     { key: "products", label: "Products", href: "/studio/products", icon: <Package size={18} /> },
   ],
 };
@@ -36,7 +34,6 @@ const PAGE_TITLES: Record<string, { title?: string; subtitle?: string }> = {
   "/dashboard/communities": { title: "Community", subtitle: "Connect and collaborate with community members" },
   "/dashboard/blog-posts": { title: "Blog Post", subtitle: "Share your stories and articles" },
   "/dashboard/blog-posts/create": { title: "Create New Post", subtitle: "Share resources, stories, and indigenous knowledge" },
-  "/dashboard/resources": { title: "Resources", subtitle: "Access educational materials and research" },
   "/dashboard/events": { title: "My Events", subtitle: "Events you've RSVPd to" },
   "/dashboard/saved": { title: "Saved Items", subtitle: "Products you've saved for later" },
   "/dashboard/settings": { title: "Settings", subtitle: "Manage your account and preferences" },

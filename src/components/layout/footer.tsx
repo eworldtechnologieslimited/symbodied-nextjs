@@ -24,12 +24,12 @@ export function Footer() {
               </h4>
               <ul className="flex flex-col gap-3">
                 {col.links.map((link) => (
-                  <li key={link}>
+                  <li key={link.label}>
                     <Link
-                      href="#"
+                      href={link.href}
                       className="text-sm text-white/70 hover:text-white transition-colors duration-200 font-sans"
                     >
-                      {link}
+                      {link.label}
                     </Link>
                   </li>
                 ))}
@@ -41,8 +41,12 @@ export function Footer() {
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/50 font-sans">
           <span>© 2026 Symbodied LLC. All rights reserved.</span>
           <div className="flex gap-5">
-            {["Privacy Policy", "Security", "Terms"].map((l) => (
-              <Link key={l} href="#" className="hover:text-white/80 transition-colors">{l}</Link>
+            {[
+              { label: "Privacy Policy", href: "/privacy" },
+              { label: "Security", href: "/security" },
+              { label: "Terms", href: "/terms" },
+            ].map((l) => (
+              <Link key={l.label} href={l.href} className="hover:text-white/80 transition-colors">{l.label}</Link>
             ))}
           </div>
         </div>

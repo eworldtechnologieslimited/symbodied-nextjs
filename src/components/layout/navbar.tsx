@@ -40,25 +40,26 @@ export function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white dark:bg-[#0f1611] border-b border-ink-200 dark:border-[#263a2b] shadow-[var(--shadow-xs)]" style={{ height: "var(--header-height)" }}>
-        <div className="max-w-[var(--container-max)] mx-auto h-full px-6 flex items-center gap-6">
-          <Link href="/" className="flex-shrink-0">
+      <header className="sticky top-0 z-40 bg-white dark:bg-[#0f1611] border-b border-ink-200 dark:border-[#263a2b] shadow-(--shadow-xs)" style={{ height: "var(--header-height)" }}>
+        <div className="max-w-(--container-max) mx-auto h-full px-6 flex items-center gap-6">
+          <Link href="/" className="shrink-0">
             <Logo height={30} />
           </Link>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1 ml-4 flex-1">
             {NAV.map((item) => {
-              const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={cn(
-                    "inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold font-sans transition-colors duration-200",
-                    active ? "text-brand bg-brand-light dark:bg-[#112618]" : "text-ink-600 dark:text-[#89a895] hover:text-ink dark:hover:text-[#dceee3] hover:bg-ink-100 dark:hover:bg-[#1b2d20]"
-                  )}
-                >
+              const active = !item.external && (pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)));
+              const cls = cn(
+                "inline-flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold font-sans transition-colors duration-200",
+                active ? "text-brand bg-brand-light dark:bg-[#112618]" : "text-ink-600 dark:text-[#89a895] hover:text-ink dark:hover:text-[#dceee3] hover:bg-ink-100 dark:hover:bg-[#1b2d20]"
+              );
+              return item.external ? (
+                <a key={item.label} href={item.href} target="_blank" rel="noreferrer noopener" className={cls}>
+                  {item.label}
+                </a>
+              ) : (
+                <Link key={item.label} href={item.href} className={cls}>
                   {item.label}
                 </Link>
               );
@@ -74,7 +75,7 @@ export function Navbar() {
             <Link href="/cart" aria-label="Cart" className="relative h-10 w-10 flex items-center justify-center rounded-lg text-ink-600 dark:text-[#89a895] hover:bg-ink-100 dark:hover:bg-[#1b2d20] transition-colors duration-200">
               <ShoppingCart size={20} />
               {mounted && count > 0 && (
-                <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-gold text-ink text-[11px] font-bold flex items-center justify-center font-sans">
+                <span className="absolute top-1 right-1 min-w-4.5 h-4.5 px-1 rounded-full bg-gold text-ink text-[11px] font-bold flex items-center justify-center font-sans">
                   {count}
                 </span>
               )}
@@ -101,7 +102,7 @@ export function Navbar() {
             <Link href="/cart" className="relative h-10 w-10 flex items-center justify-center rounded-lg text-ink-600 dark:text-[#89a895]">
               <ShoppingCart size={20} />
               {count > 0 && (
-                <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-gold text-ink text-[11px] font-bold flex items-center justify-center">
+                <span className="absolute top-1 right-1 min-w-4.5 h-4.5 px-1 rounded-full bg-gold text-ink text-[11px] font-bold flex items-center justify-center">
                   {count}
                 </span>
               )}
@@ -122,19 +123,21 @@ export function Navbar() {
         <div className="fixed inset-0 z-30 md:hidden" onClick={() => setMobileOpen(false)}>
           <div className="absolute inset-0 bg-ink/30 backdrop-blur-sm" />
           <nav
-            className="absolute top-[72px] left-0 right-0 bg-white dark:bg-[#0f1611] border-b border-ink-200 dark:border-[#263a2b] shadow-[var(--shadow-lg)] flex flex-col p-4 gap-1"
+            className="absolute top-18 left-0 right-0 bg-white dark:bg-[#0f1611] border-b border-ink-200 dark:border-[#263a2b] shadow-(--shadow-lg) flex flex-col p-4 gap-1"
             onClick={(e) => e.stopPropagation()}
           >
-            {NAV.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold font-sans text-ink-600 dark:text-[#89a895] hover:bg-ink-100 dark:hover:bg-[#1b2d20] hover:text-ink dark:hover:text-[#dceee3] transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {NAV.map((item) => {
+              const cls = "flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold font-sans text-ink-600 dark:text-[#89a895] hover:bg-ink-100 dark:hover:bg-[#1b2d20] hover:text-ink dark:hover:text-[#dceee3] transition-colors";
+              return item.external ? (
+                <a key={item.label} href={item.href} target="_blank" rel="noreferrer noopener" onClick={() => setMobileOpen(false)} className={cls}>
+                  {item.label}
+                </a>
+              ) : (
+                <Link key={item.label} href={item.href} onClick={() => setMobileOpen(false)} className={cls}>
+                  {item.label}
+                </Link>
+              );
+            })}
             <div className="flex gap-2 mt-2 pt-3 border-t border-ink-200 dark:border-[#263a2b]">
               {mounted && user ? (
                 <Link href="/dashboard" className="flex-1" onClick={() => setMobileOpen(false)}>

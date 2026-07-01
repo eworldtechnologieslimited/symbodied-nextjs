@@ -44,7 +44,32 @@ export const events = [
 export const navLinks = ["Home", "Shop", "Programs", "Blog", "Projects", "Events"];
 
 export const footerCols = [
-  { heading: "Marketplace", links: ["Shop All", "Agriculture", "Medicine", "Textile", "Technology"] },
-  { heading: "Community", links: ["Projects", "Events", "Blog", "Solidarity"] },
-  { heading: "Company", links: ["About", "Contact", "FAQs", "Careers"] },
+  {
+    heading: "Marketplace",
+    links: [
+      { label: "Shop All", href: "/shop" },
+      { label: "Agriculture", href: "/shop?category=Agriculture" },
+      { label: "Medicine", href: "/shop?category=Medicine" },
+      { label: "Textile", href: "/shop?category=Textile" },
+      { label: "Technology", href: "/shop?category=Technology" },
+    ],
+  },
+  {
+    heading: "Community",
+    links: [
+      { label: "Projects", href: "/projects" },
+      { label: "Events", href: "/events" },
+      { label: "Blog", href: "/blog" },
+      { label: "Solidarity", href: "/solidarity" },
+    ],
+  },
+  {
+    heading: "Company",
+    links: [
+      { label: "About", href: "/about" },
+      { label: "Contact", href: "/contact" },
+      { label: "FAQs", href: "#" },
+      { label: "Careers", href: "#" },
+    ],
+  },
 ];

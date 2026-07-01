@@ -1,7 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Resend } from "resend";
 import { createClient } from "@/lib/supabase/server";
+import { rsvpConfirmationHtml } from "@/lib/email";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function rsvpForEvent(eventId: string) {
   const supabase = await createClient();
@@ -17,7 +21,6 @@ export async function rsvpForEvent(eventId: string) {
 
   if (existing) {
     await supabase.from("event_rsvps").delete().eq("id", existing.id);
-    // Decrement rsvps, floor at 0
     const { data: ev } = await supabase.from("events").select("rsvps").eq("id", eventId).single();
     const current = (ev as { rsvps: number } | null)?.rsvps ?? 0;
     await supabase.from("events").update({ rsvps: Math.max(0, current - 1) }).eq("id", eventId);
@@ -26,9 +29,33 @@ export async function rsvpForEvent(eventId: string) {
       .from("event_rsvps")
       .insert({ event_id: eventId, user_id: user.id });
     if (error) return { error: error.message };
-    const { data: ev } = await supabase.from("events").select("rsvps").eq("id", eventId).single();
+
+    const { data: ev } = await supabase
+      .from("events")
+      .select("rsvps, name, date, venue, location")
+      .eq("id", eventId)
+      .single();
+
     const current = (ev as { rsvps: number } | null)?.rsvps ?? 0;
     await supabase.from("events").update({ rsvps: current + 1 }).eq("id", eventId);
+
+    if (user.email && ev) {
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://symbodied.com";
+      const event = ev as { name: string; date: string; venue: string | null; location: string | null };
+      resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL ?? "Symbodied <newsletter@symbodied.com>",
+        to: user.email,
+        subject: `You're going to ${event.name}`,
+        html: rsvpConfirmationHtml({
+          userName: user.email,
+          eventName: event.name,
+          eventDate: event.date,
+          eventVenue: event.venue,
+          eventLocation: event.location,
+          eventsUrl: `${appUrl}/events`,
+        }),
+      }).catch(() => {});
+    }
   }
 
   revalidatePath("/events");
@@ -47,13 +74,14 @@ export async function createEvent(formData: FormData) {
   const venue = (formData.get("venue") as string)?.trim() || null;
   const location = (formData.get("location") as string)?.trim() || null;
   const description = (formData.get("description") as string)?.trim() || null;
+  const image_url = (formData.get("image_url") as string)?.trim() || null;
   const slots = parseInt(formData.get("slots") as string, 10) || 100;
 
   if (!name || !date) return { error: "Name and date are required." };
 
   const { error } = await supabase.from("events").insert({
     user_id: user.id,
-    name, theme, date, venue, location, description, slots,
+    name, theme, date, venue, location, description, image_url, slots,
     status: "active",
   });
 

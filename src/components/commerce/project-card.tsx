@@ -16,11 +16,10 @@ interface ProjectCardProps {
   daysLeft: number;
   seed?: number;
   image?: string;
-  onDonate?: () => void;
   dark?: boolean;
 }
 
-export function ProjectCard({ name, category, summary, raised, target, creator, daysLeft, seed = 0, image, onDonate, dark }: ProjectCardProps) {
+export function ProjectCard({ name, category, summary, raised, target, creator, daysLeft, seed = 0, image, dark }: ProjectCardProps) {
   const funded = pct(raised, target);
   const cardClass = dark
     ? "bg-ink-800 border-ink-700 text-white"
@@ -56,7 +55,14 @@ export function ProjectCard({ name, category, summary, raised, target, creator, 
           </div>
         </div>
         <p className={`text-xs font-sans ${dark ? "text-white/50" : "text-ink-500 dark:text-[#668074]"}`}>by {creator}</p>
-        <Button variant="gold" size="sm" fullWidth onClick={onDonate}>Donate Now</Button>
+        <a
+          href="https://southernvision.ourpowerbase.net/civicrm/contribute/transact?reset=1&id=119"
+          target="_blank"
+          rel="noreferrer noopener"
+          className="block w-full"
+        >
+          <Button variant="gold" size="sm" fullWidth>Donate Now</Button>
+        </a>
       </div>
     </div>
   );

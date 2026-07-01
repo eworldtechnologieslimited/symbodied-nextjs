@@ -1,3 +1,124 @@
+export function rsvpConfirmationHtml({
+  userName,
+  eventName,
+  eventDate,
+  eventVenue,
+  eventLocation,
+  eventsUrl,
+}: {
+  userName: string;
+  eventName: string;
+  eventDate: string;
+  eventVenue: string | null;
+  eventLocation: string | null;
+  eventsUrl: string;
+}): string {
+  const logoUrl = "https://res.cloudinary.com/dbfcs4uvj/image/upload/v1782586720/logo_t5fydz.png";
+
+  const formattedDate = new Date(eventDate).toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const placeLines = [eventVenue, eventLocation].filter(Boolean).join("<br/>");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>You're going to ${eventName}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f1eb;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f1eb;padding:40px 16px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background-color:#1a2e1c;border-radius:16px 16px 0 0;padding:36px 40px;text-align:center;">
+              <div style="display:inline-block;width:80px;height:80px;border-radius:50%;background-color:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.25);box-shadow:0 4px 20px rgba(0,0,0,0.30),inset 0 1px 0 rgba(255,255,255,0.30);line-height:80px;text-align:center;vertical-align:middle;margin-bottom:18px;">
+                <img src="${logoUrl}" width="44" height="44" alt="Symbodied" style="display:inline-block;vertical-align:middle;border:0;" />
+              </div>
+              <p style="margin:0;font-size:22px;font-weight:800;color:#f0c060;letter-spacing:0.04em;text-transform:uppercase;">SYMBODIED</p>
+              <p style="margin:8px 0 0;font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:0.12em;text-transform:uppercase;">Tradition · Heritage · Identity</p>
+            </td>
+          </tr>
+
+          <!-- Golden divider -->
+          <tr>
+            <td style="background-color:#1a2e1c;padding:0 40px;">
+              <div style="height:3px;background:linear-gradient(90deg,#f0c060,#d4a840,#f0c060);border-radius:2px;"></div>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="background-color:#1a2e1c;border-radius:0 0 16px 16px;padding:40px 40px 48px;">
+              <p style="margin:0 0 4px;font-size:26px;font-weight:700;color:#dceee3;line-height:1.3;">You're on the list. 🎉</p>
+              <p style="margin:0 0 28px;font-size:14px;color:rgba(255,255,255,0.55);line-height:1.6;">
+                Hi <strong style="color:rgba(255,255,255,0.75);">${userName}</strong>, your RSVP for the event below has been confirmed.
+              </p>
+
+              <!-- Event card -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
+                <tr>
+                  <td style="background-color:rgba(255,255,255,0.05);border:1px solid rgba(240,192,96,0.25);border-radius:12px;padding:24px 28px;">
+                    <p style="margin:0 0 6px;font-size:11px;font-weight:700;color:#f0c060;text-transform:uppercase;letter-spacing:0.10em;">Event</p>
+                    <p style="margin:0 0 20px;font-size:20px;font-weight:700;color:#dceee3;line-height:1.3;">${eventName}</p>
+
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td width="50%" style="vertical-align:top;padding-right:12px;">
+                          <p style="margin:0 0 4px;font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;">Date</p>
+                          <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;">${formattedDate}</p>
+                        </td>
+                        ${placeLines ? `<td width="50%" style="vertical-align:top;padding-left:12px;">
+                          <p style="margin:0 0 4px;font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;">Location</p>
+                          <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;">${placeLines}</p>
+                        </td>` : ""}
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA -->
+              <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 32px;">
+                <tr>
+                  <td style="background-color:#f0c060;border-radius:10px;">
+                    <a href="${eventsUrl}" style="display:inline-block;padding:14px 32px;font-size:14px;font-weight:700;color:#1a1a1a;text-decoration:none;letter-spacing:0.02em;">View All Events →</a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.35);line-height:1.7;text-align:center;">
+                A living symbol of tradition, heritage and collective identity —<br/>
+                empowering communities through commerce, culture, and solidarity.
+              </p>
+            </td>
+          </tr>
+
+          <tr><td style="height:24px;"></td></tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="text-align:center;padding:0 16px 8px;">
+              <p style="margin:0;font-size:11px;color:#9a9286;">© 2026 Symbodied LLC. All rights reserved.</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
 export function subscribeConfirmationHtml({
   email,
   unsubscribeUrl,

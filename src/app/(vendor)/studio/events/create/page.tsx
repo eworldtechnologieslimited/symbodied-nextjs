@@ -66,6 +66,10 @@ export default function StudioCreateEventPage() {
           <input name="slots" type="number" min="1" defaultValue="50" required className={field} />
         </div>
         <div className="flex flex-col gap-1.5">
+          <label className={label}>Event Flyer <span className="font-normal text-ink-400">(image URL, optional)</span></label>
+          <input name="image_url" type="url" placeholder="https://…" className={field} />
+        </div>
+        <div className="flex flex-col gap-1.5">
           <label className={label}>Description <span className="font-normal text-ink-400">(optional)</span></label>
           <textarea name="description" rows={3} placeholder="What attendees can expect…"
             className="w-full px-4 py-3 rounded-lg border border-ink-200 font-sans text-sm text-ink bg-white placeholder:text-ink-400 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all resize-none" />
